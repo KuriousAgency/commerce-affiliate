@@ -1,0 +1,40 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Affiliate plugin for Craft CMS 3.x
+ *
+ * Affiliate index.twig
+ *
+ * @author    Kurious Agency
+ * @copyright Copyright (c) 2019 Kurious Agency
+ * @link      https://kurious.agency
+ * @package   Affiliate
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("kuriousagency\\affiliate\\assetbundles\\affiliate\\AffiliateAsset") %}
+{% do view.registerAssetBundle("kuriousagency\\affiliate\\assetbundles\\indexcpsection\\IndexCPSectionAsset") %}
+
+{% set docsUrl = "https://github.com/KuriousAgency/affiliate/blob/master/README.md" %}
+
+{% set title = "Affiliate" %}
+
+{% set pluginCpUrl = url('affiliate') %}
+
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@kuriousagency/affiliate/assetbundles/indexcpsection/dist', true) ~ '/img/Index-icon.svg' %}
+
+{% set extraPageHeaderHtml %}
+    <div class="buttons">
+        <a href="{{ pluginCpUrl }}" class="btn submit add icon">{{ "Click Me!"|t('affiliate') }}</a>
+    </div>
+{% endset %}
+
+{% set content %}
+    <h2>{{ "Index CP Section body goes here"|t('affiliate') }}</h2>
+    <img src="{{ iconUrl }}" height="64" width="64" />
+    <p class="textline"></p>
+{% endset %}

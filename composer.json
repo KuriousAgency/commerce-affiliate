@@ -1,0 +1,43 @@
+{
+    "name": "kuriousagency/affiliate",
+    "description": "Plugin to add affiliates to Craft Commerce",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "affiliate"
+    ],
+    "support": {
+        "docs": "https://github.com/KuriousAgency/affiliate/blob/master/README.md",
+        "issues": "https://github.com/KuriousAgency/affiliate/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kurious Agency",
+            "homepage": "https://kurious.agency"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "kuriousagency\\affiliate\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Affiliate",
+        "handle": "affiliate",
+        "hasCpSettings": true,
+        "hasCpSection": true,
+        "changelogUrl": "https://raw.githubusercontent.com/KuriousAgency/affiliate/master/CHANGELOG.md",
+        "components": {
+            "affiliateService": "kuriousagency\\affiliate\\services\\AffiliateService"
+        },
+        "class": "kuriousagency\\affiliate\\Affiliate"
+    }
+}
