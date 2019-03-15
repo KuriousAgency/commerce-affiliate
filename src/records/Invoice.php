@@ -14,13 +14,16 @@ use kuriousagency\affiliate\Affiliate;
 
 use Craft;
 use craft\db\ActiveRecord;
+use craft\records\User;
+use craft\records\Element;
+use yii\db\ActiveQueryInterface;
 
 /**
  * @author    Kurious Agency
  * @package   Affiliate
  * @since     1.0.0
  */
-class AffiliateRecord extends ActiveRecord
+class Invoice extends ActiveRecord
 {
     // Public Static Methods
     // =========================================================================
@@ -30,6 +33,15 @@ class AffiliateRecord extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%affiliate_affiliaterecord}}';
+        return '{{%affiliate_invoices}}';
+	}
+
+	 /**
+     * @return ActiveQueryInterface
+     */
+    public function getElement(): ActiveQueryInterface
+    {
+        return $this->hasOne(Element::class, ['id' => 'id']);
     }
+	
 }

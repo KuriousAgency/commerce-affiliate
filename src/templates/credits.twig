@@ -1,0 +1,18 @@
+{% extends "_layouts/elementindex" %}
+
+{% set title = "Affilate"|t('affiliate') %}
+{% set docTitle = title~' - '~'Credits' %}
+{% set elementType = 'kuriousagency\\affiliate\\elements\\Credit' %}
+{% set selectedTab = 'credits' %}
+{% set selectedSubnavItem = "credits" %}
+
+{% set statusSnippet %}
+    .status.approved {
+        background-color: #27AE60;
+    }
+    .status.invoiced {
+        background-color: #D0021B;
+    }
+{% endset %}
+
+{% includeCss(statusSnippet) %}

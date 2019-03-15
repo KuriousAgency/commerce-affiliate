@@ -20,7 +20,7 @@ use craft\base\Model;
  * @package   Affiliate
  * @since     1.0.0
  */
-class Settings extends Model
+class UserTracking extends Model
 {
     // Public Properties
     // =========================================================================
@@ -28,35 +28,29 @@ class Settings extends Model
     /**
      * @var string
      */
-	public $pendingDays = 0;
+	public $id;
 	
-	public $affiliateUserGroup = [];
+	public $userId;
 
-	public $percentage = 0;
-
-	public $exchangeRates = [];
-
-	public $voucherExpiryMonths = 12;
-	
-	public $voucherEmailTemplate = "";	
-
-	public $newCustomerTemplatePath = "";
-
-	public $newCustomerDiscountCodeId = "";
-
-	public $newCustomerEmailTemplate = "";
+	public $trackingId;
 
     // Public Methods
     // =========================================================================
 
-    // /**
-    //  * @inheritdoc
-    //  */
-    // public function rules()
-    // {
-    //     return [
-    //         ['someAttribute', 'string'],
-    //         ['someAttribute', 'default', 'value' => 'Some Default'],
-    //     ];
-    // }
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['userId', 'trackingId'], 'required'],
+        ];
+	}
+
+	public function getUser(): array
+    {
+        return $this->userId ? Craft::$app->getUsers()->getUserById($this->userId) : [];
+	}
+
+	
 }

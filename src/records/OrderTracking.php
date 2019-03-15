@@ -8,33 +8,31 @@
  * @copyright Copyright (c) 2019 Kurious Agency
  */
 
-namespace kuriousagency\affiliate\services;
+namespace kuriousagency\affiliate\records;
 
 use kuriousagency\affiliate\Affiliate;
 
 use Craft;
-use craft\base\Component;
+use craft\db\ActiveRecord;
+use craft\records\User;
+use yii\db\ActiveQueryInterface;
 
 /**
  * @author    Kurious Agency
  * @package   Affiliate
  * @since     1.0.0
  */
-class AffiliateService extends Component
+class OrderTracking extends ActiveRecord
 {
-    // Public Methods
+    // Public Static Methods
     // =========================================================================
 
-    /*
-     * @return mixed
+    /**
+     * @inheritdoc
      */
-    public function exampleService()
+    public static function tableName()
     {
-        $result = 'something';
-        // Check our Plugin's settings for `someAttribute`
-        if (Affiliate::$plugin->getSettings()->someAttribute) {
-        }
-
-        return $result;
-    }
+        return '{{%affiliate_order_tracking}}';
+	}
+	
 }

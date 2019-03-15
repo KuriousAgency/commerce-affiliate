@@ -9,3 +9,8 @@
  * @package   Affiliate
  * @since     1.0.0
  */
+
+
+ .status.paid {
+	background-color: green;
+ }

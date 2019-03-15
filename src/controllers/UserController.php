@@ -11,16 +11,19 @@
 namespace kuriousagency\affiliate\controllers;
 
 use kuriousagency\affiliate\Affiliate;
+use kuriousagency\affiliate\elements\Credit;
 
 use Craft;
 use craft\web\Controller;
+
+use craft\commerce\Plugin as Commerce;
 
 /**
  * @author    Kurious Agency
  * @package   Affiliate
  * @since     1.0.0
  */
-class DefaultController extends Controller
+class UserController extends Controller
 {
 
     // Protected Properties
@@ -31,28 +34,34 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['index', 'do-something'];
+    protected $allowAnonymous = [];
 
     // Public Methods
     // =========================================================================
 
     /**
-     * @return mixed
+	 * send email to customer with referrer link and voucher code
      */
-    public function actionIndex()
+    public function actionNewCustomerEmail()
     {
-        $result = 'Welcome to the DefaultController actionIndex() method';
+		
+		$this->requirePostRequest();
+		$email = Craft::$app->getRequest()->getRequiredBodyParam('email');
 
-        return $result;
-    }
+		Affiliate::$plugin->users->sendNewCustomerEmail($email);
 
-    /**
-     * @return mixed
-     */
-    public function actionDoSomething()
-    {
-        $result = 'Welcome to the DefaultController actionDoSomething() method';
+		$this->redirectToPostedUrl();
+	}
 
-        return $result;
-    }
+	public function actionSavePaymentEmail()
+	{
+		$this->requirePostRequest();
+		$paymentEmail = Craft::$app->getRequest()->getRequiredBodyParam('paymentEmail');
+		$user =  Craft::$app->getUser()->getIdentity();
+
+		Affiliate::$plugin->users->save($user,$paymentEmail);
+
+		$this->redirectToPostedUrl();
+	}
+   
 }

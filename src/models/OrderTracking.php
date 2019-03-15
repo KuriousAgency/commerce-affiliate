@@ -15,12 +15,14 @@ use kuriousagency\affiliate\Affiliate;
 use Craft;
 use craft\base\Model;
 
+use craft\commerce\Plugin as Commerce;
+
 /**
  * @author    Kurious Agency
  * @package   Affiliate
  * @since     1.0.0
  */
-class Settings extends Model
+class OrderTracking extends Model
 {
     // Public Properties
     // =========================================================================
@@ -28,35 +30,28 @@ class Settings extends Model
     /**
      * @var string
      */
-	public $pendingDays = 0;
+	public $id;
 	
-	public $affiliateUserGroup = [];
+	public $orderId;
 
-	public $percentage = 0;
-
-	public $exchangeRates = [];
-
-	public $voucherExpiryMonths = 12;
-	
-	public $voucherEmailTemplate = "";	
-
-	public $newCustomerTemplatePath = "";
-
-	public $newCustomerDiscountCodeId = "";
-
-	public $newCustomerEmailTemplate = "";
+	public $trackingId;
 
     // Public Methods
     // =========================================================================
 
-    // /**
-    //  * @inheritdoc
-    //  */
-    // public function rules()
-    // {
-    //     return [
-    //         ['someAttribute', 'string'],
-    //         ['someAttribute', 'default', 'value' => 'Some Default'],
-    //     ];
-    // }
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['orderId', 'trackingId'], 'required'],
+        ];
+	}
+
+	public function getOrder(): array
+    {
+        return $this->orderId ? Commerce::getInstance()->getOrders()->getOrderById($this->orderId) : [];
+    }
+	
 }

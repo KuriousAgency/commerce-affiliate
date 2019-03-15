@@ -1,0 +1,16 @@
+{% extends "_layouts/elementindex" %}
+
+{% set title = "Affiliate Invoices"|t('affiliate') %}
+{% set docTitle = title~' - '~'Invoices' %}
+{% set elementType = 'kuriousagency\\affiliate\\elements\\Invoice' %}
+
+{% set statusSnippet %}
+    .status.paid {
+        background-color: #27AE60;
+    }
+    .status.unpaid {
+        background-color: #D0021B;
+    }
+{% endset %}
+
+{% includeCss(statusSnippet) %}
