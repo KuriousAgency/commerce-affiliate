@@ -287,7 +287,11 @@ class Credit extends Element
 				{
 					$totalPrice = Currency::round($this->totalPrice);
 
-					$currency = $this->getUser()->currency;
+					if(isset($this->getUser()->currency)) {
+						$currency = $this->getUser()->currency;
+					} else {
+						$currency = Commerce::getInstance()->getPaymentCurrencies()->getPrimaryPaymentCurrencyIso();
+					}
 
 					return Craft::$app->getFormatter()->asCurrency($totalPrice, $currency);
 				}

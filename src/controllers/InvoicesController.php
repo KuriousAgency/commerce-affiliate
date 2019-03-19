@@ -76,7 +76,11 @@ class InvoicesController extends Controller
 				return false;
 			}
 
-			$currency = $user->currency ? $user->currency : Commerce::getInstance()->getPaymentCurrencies()->getPrimaryPaymentCurrencyIso();
+			if(isset($user->currency)) {
+				$currency = $user->currency;
+			} else {
+				$currency = Commerce::getInstance()->getPaymentCurrencies()->getPrimaryPaymentCurrencyIso();
+			}
 
 			$invoice = new Invoice();
 			$invoice->number = Affiliate::$plugin->invoices->generateCartNumber();
@@ -170,6 +174,4 @@ class InvoicesController extends Controller
         ]);
 	}
 	
-	
-   
 }

@@ -114,67 +114,70 @@ class CartController extends Controller
 
 	}
 	
-	public function actionTestVoucher()
-	{
+	// public function actionTestVoucher()
+	// {
 		
 		
-		$affiliateUser = Craft::$app->users->getUserById(150);
+	// 	$affiliateUser = Craft::$app->users->getUserById(150);
 
-		// Affiliate::$plugin->vouchers->createGiftVoucher($user);
-		$order = Commerce::getInstance()->getOrders()->getOrderById(398);
+	// 	// Affiliate::$plugin->vouchers->createGiftVoucher($user);
+	// 	$order = Commerce::getInstance()->getOrders()->getOrderById(398);
 
-		Affiliate::$plugin->vouchers->referrerVoucher($affiliateUser,$order);
+	// 	Affiliate::$plugin->vouchers->referrerVoucher($affiliateUser,$order);
 
-		Craft::$app->end();
+	// 	Craft::$app->end();
 
-		return true;
-	}
+	// 	return true;
+	// }
 
-	public function actionTestCredits()
-	{
-		$order = Commerce::getInstance()->getOrders()->getOrderById(398);
+	// public function actionTestCredits()
+	// {
+	// 	$order = Commerce::getInstance()->getOrders()->getOrderById(398);
 
-		if(Craft::$app->session->get('userRef')) {
+	// 	if(Craft::$app->session->get('userRef')) {
 
-			Affiliate::$plugin->users->saveOrderTracking($order->id,Craft::$app->session->get('userRef'));
+	// 		Affiliate::$plugin->users->saveOrderTracking($order->id,Craft::$app->session->get('userRef'));
 				
-			$affiliateUser = Affiliate::$plugin->users->getUserByTrackingRef(Craft::$app->session->get('userRef'));
+	// 		$affiliateUser = Affiliate::$plugin->users->getUserByTrackingRef(Craft::$app->session->get('userRef'));
 
-			if($affiliateUser) {
+	// 		if($affiliateUser) {
 
-				// check if affiliate
-				if(Affiliate::$plugin->users->checkUserAffiliateGroup($affiliateUser)) {
+	// 			// affiliate
+	// 			if(Affiliate::$plugin->users->checkUserAffiliateGroup($affiliateUser)) {
 					
-					$orderTotal = $order->totalPrice;
-					
-					if($affiliateUser->currency != $order->currency) {
-						
-						// convert order total to affiliates currency
-						if(array_key_exists($affiliateUser->currency,Affiliate::$plugin->getSettings()->exchangeRates)) {
-							$conversionRate = Affiliate::$plugin->getSettings()->exchangeRates[$affiliateUser->currency];
-							$orderTotal = $order->totalPrice/$conversionRate;
-						}
+	// 				$orderTotal = $order->totalPrice;
 
-					}
+	// 				// currency conversion
+	// 				if(isset($affiliateUser->currency)) {
+	// 					if($affiliateUser->currency != $order->currency) {
+							
+	// 						// convert order total to affiliates currency
+	// 						if(array_key_exists($affiliateUser->currency,Affiliate::$plugin->getSettings()->exchangeRates)) {
+	// 							$conversionRate = Affiliate::$plugin->getSettings()->exchangeRates[$affiliateUser->currency];
+	// 							$orderTotal = $order->totalPrice/$conversionRate;
+	// 						}
+	// 					}
+	// 				}
 
-					$credit = new Credit;
-					$credit->orderId = $order->id;
-					$credit->userId = $affiliateUser->id;
-					$credit->totalPrice = round($orderTotal * (Affiliate::$plugin->getSettings()->percentage/100),2);
+	// 				$credit = new Credit;
+	// 				$credit->orderId = $order->id;
+	// 				$credit->userId = $affiliateUser->id;
+	// 				$credit->totalPrice = round($orderTotal * (Affiliate::$plugin->getSettings()->percentage/100),2);
 
-					Craft::$app->getElements()->saveElement($credit, false);
-				} 
-				// referrer send gift voucher if this is new customers first order
-				else {
-					Affiliate::$plugin->voucher->referrerVoucher($affiliateUser,$order);
-				}
+	// 				Craft::$app->getElements()->saveElement($credit, false);
+	// 			} 
 
-			}
-		}
+	// 			// referrer send gift voucher if this is new customers first order
+	// 			else {
+	// 				Affiliate::$plugin->voucher->referrerVoucher($affiliateUser,$order);
+	// 			}
 
-		Craft::$app->end();
+	// 		}
+	// 	}
 
-	}
+	// 	Craft::$app->end();
+
+	// }
 
 
    

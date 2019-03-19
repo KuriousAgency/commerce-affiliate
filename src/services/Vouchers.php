@@ -63,7 +63,7 @@ class Vouchers extends Component
 	{
 		
 		// get or create voucher
-		if($user->currency) {
+		if(isset($user->currency)) {
 			$voucherSku = $user->currency;
 		} else {
 			$voucherSku = Commerce::getInstance()->getPaymentCurrencies()->getPrimaryPaymentCurrencyIso();

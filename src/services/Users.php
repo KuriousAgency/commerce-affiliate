@@ -91,7 +91,6 @@ class Users extends Component
 		return false; 
 	}
 
-
 	public function save($user,$paymentEmail="")
 	{
 		$record = UserTrackingRecord::find()->where([

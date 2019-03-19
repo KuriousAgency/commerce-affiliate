@@ -58,8 +58,9 @@ class UsersController extends Controller
 		$this->requirePostRequest();
 		$paymentEmail = Craft::$app->getRequest()->getRequiredBodyParam('paymentEmail');
 	
-		// set paymnet email
+		// set payment email
 		$user =  Craft::$app->getUser()->getIdentity();
+
 		Affiliate::$plugin->users->save($user,$paymentEmail);
 
 		// assign user to selected affiliate group

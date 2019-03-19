@@ -156,11 +156,13 @@ class Affiliate extends Plugin
 						
 						$orderTotal = $order->totalPrice;
 						
-						if($affiliateUser->currency != $order->currency) {
-							// convert order total to affiliates currency
-							if(array_key_exists($affiliateUser->currency,Affiliate::$plugin->getSettings()->exchangeRates)) {
-								$conversionRate = Affiliate::$plugin->getSettings()->exchangeRates[$affiliateUser->currency];
-								$orderTotal = $order->totalPrice/$conversionRate;
+						if(isset($affiliateUser->currency)) {
+							if($affiliateUser->currency != $order->currency) {
+								// convert order total to affiliates currency
+								if(array_key_exists($affiliateUser->currency,Affiliate::$plugin->getSettings()->exchangeRates)) {
+									$conversionRate = Affiliate::$plugin->getSettings()->exchangeRates[$affiliateUser->currency];
+									$orderTotal = $order->totalPrice/$conversionRate;
+								}
 							}
 						}
 
