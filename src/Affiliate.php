@@ -184,10 +184,10 @@ class Affiliate extends Plugin
 		Event::on(Elements::class,Elements::EVENT_AFTER_SAVE_ELEMENT,function(Event $e) {
 			if ($e->element instanceof User) {
 				
-				// if($e->isNew) {
+				if($e->isNew) {
 					$user = $e->element;
 					Affiliate::$plugin->users->save($user);
-				// }
+				}
 
 			}
 		});
