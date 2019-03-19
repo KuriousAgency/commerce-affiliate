@@ -59,7 +59,7 @@
 <div class="meta read-only">
 	<div class="data">
 		<div class="heading">
-			Date
+			<strong>Date</strong>
 		</div>
 		<div class="value">
 			{{ invoice.dateCreated|date() }}
@@ -67,7 +67,7 @@
 	</div>
 	<div class="data">
 		<div class="heading">
-			Number
+			<strong>Number</strong>
 		</div>
 		<div class="value">
 			{{ invoice.shortNumber }}
@@ -75,15 +75,16 @@
 	</div>
 	<div class="data">
 		<div class="heading">
-			Customer
+			<strong>Customer</strong>
 		</div>
 		<div class="value">
-			{{ invoice.user }}
+			<a href="{{ invoice.user.cpEditUrl}}">{{ invoice.user }}</a>
+			
 		</div>
 	</div>
 	<div class="data">
 		<div class="heading">
-			Total
+			<strong>Total</strong>
 		</div>
 		<div class="value">
 			{{ invoice.totalPrice|currency(invoice.currency) }}
@@ -91,7 +92,7 @@
 	</div>
 	<div class="data">
 		<div class="heading">
-			Payment Email
+			<strong>Payment Email</strong>
 		</div>
 		<div class="value">
 			{{ invoice.paymentEmail }}
@@ -99,10 +100,10 @@
 	</div>
 	<div class="data">
 		<div class="heading">
-			Paid Status
+			<strong>Paid Status</strong>
 		</div>
 		<div class="value">
-			{{ invoice.paid == 1 ? "Paid" : "Unpaid" }}
+			{{ invoice.paidStatusHtml|raw }}
 		</div>
 	</div>
 
