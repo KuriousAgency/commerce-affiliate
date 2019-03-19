@@ -77,14 +77,14 @@ class Users extends Component
 
 	public function checkUserAffiliateGroup($user)
 	{
-		$currentGroups = [];
-		$affiliateGroups = Affiliate::$plugin->getSettings()->affiliateUserGroup;
+		$currentGroupIds = [];
+		$affiliateGroup = str_replace("_","",Affiliate::$plugin->getSettings()->affiliateUserGroup);
 		
 		foreach($user->getGroups() as $group) {
-			$currentGroups[] = $group->id;	
+			$currentGroupIds[] = $group->id;	
 		}
 
-		if(count(array_intersect($affiliateGroups, $currentGroups))) {
+		if(in_array($affiliateGroup,$currentGroupIds)) {
 			return true;
 		}
 

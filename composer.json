@@ -23,8 +23,8 @@
     ],
     "require": {
 		"craftcms/cms": "^3.0.0-RC1",
+		"craftcms/commerce": "^2.0.0-alpha.6",
 		"verbb/gift-voucher": "^2.0.0"
-		
     },
     "autoload": {
         "psr-4": {

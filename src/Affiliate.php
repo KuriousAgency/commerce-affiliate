@@ -231,16 +231,11 @@ class Affiliate extends Plugin
 
 			Craft::$app->session->set('userRef',$userTrackingRef);
 
-			// TODO send to template path if referer
+			// send to template path if referer
 			$user = Affiliate::$plugin->users->getUserByTrackingRef($userTrackingRef);
-			$currentGroups = [];
-			$affiliateGroups = Affiliate::$plugin->getSettings()->affiliateUserGroup;
-			foreach($user->getGroups() as $group) {
-				$currentGroups[] = $group->id;	
-			}
 			
 			// if not an affiliate redirect to new customer page
-			if(!count(array_intersect($affiliateGroups, $currentGroups))) {
+			if(!Affiliate::$plugin->users->checkUserAffiliateGroup($user)) {
 
 				$redirectUrl = Affiliate::$plugin->getSettings()->newCustomerTemplatePath ? Affiliate::$plugin->getSettings()->newCustomerTemplatePath : "/";
 

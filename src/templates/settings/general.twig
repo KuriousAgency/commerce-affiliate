@@ -52,7 +52,7 @@
 
 <h2>Affiliate</h2>
 
-{% if currentUser.admin %}
+{# {% if currentUser.admin %}
 	{% set assignableGroups = craft.app.userGroups.getAssignableGroups(currentUser) %}
 	{% set currentGroupIds = settings['affiliateUserGroup'] is defined ? settings['affiliateUserGroup'] : [] %}
 
@@ -65,7 +65,7 @@
 					<li>
 						{{ forms.checkbox({
 							label: group.name|t('site')|e,
-							name: 'settings[affiliateUserGroup[]]',
+							name: 'settings[affiliateUserGroup][]',
 							value: group.id,
 							checked: (group.id in currentGroupIds)
 						}) }}
@@ -82,6 +82,24 @@
 		fieldId: 'affiliateUserGroup',
 		instructions: 'Please select the user groups to be used for Affiliates.',
 	}, userGroupsInput) }}
+{% endif %} #}
+
+{% if currentUser.admin %}
+
+	{% set assignableGroups = craft.app.userGroups.getAssignableGroups(currentUser) %}
+	{% set groupOptions = [] %}
+	{% for group in assignableGroups %}
+		{% set groupOptions = groupOptions|merge({('_'~group.id): (group.name)}) %}
+	{% endfor %}
+
+	{{ forms.selectField({
+		label: 'Affiliate User Group',
+		instructions: 'Please select the user group to be used for Affiliates',
+		id: 'affiliateUserGroup',
+		name: 'settings[affiliateUserGroup]',
+		value: settings['affiliateUserGroup'],
+		options: groupOptions
+	}) }}
 {% endif %}
 
 {{ forms.textField({
@@ -99,7 +117,6 @@
     name: 'settings[percentage]',
     value: settings['percentage']
 }) }}
-
 
 {# currency exchange rates #}
 {% set currencies = craft.commerce.paymentCurrencies.allPaymentCurrencies %}
@@ -119,7 +136,7 @@
 		{{ forms.textField({
 			label: currency.iso,
 			id: 'exchangeRates',
-			name: 'settings[exchangeRates['~currency.iso~']]',
+			name: 'settings[exchangeRates]['~currency.iso~']',
 			value: settings['exchangeRates'][currency.iso] is defined ? settings['exchangeRates'][currency.iso] : ""
 		}) }}
 	{% endfor %}
@@ -131,7 +148,9 @@
 {% set discountOptions = [] %}
 
 {% for discount in discounts %}
-	{% set discountOptions = discountOptions|merge({('_'~discount.id): (discount.code)}) %}
+	{% if discount.code %}
+		{% set discountOptions = discountOptions|merge({('_'~discount.id): (discount.code)}) %}
+	{% endif %}
 {% endfor %}
 
 {{ forms.selectField({

@@ -23,7 +23,7 @@ use craft\commerce\Plugin as Commerce;
  * @package   Affiliate
  * @since     1.0.0
  */
-class UserController extends Controller
+class UsersController extends Controller
 {
 
     // Protected Properties
@@ -42,7 +42,7 @@ class UserController extends Controller
     /**
 	 * send email to customer with referrer link and voucher code
      */
-    public function actionNewCustomerEmail()
+    public function actionTestNewCustomerEmail()
     {
 		
 		$this->requirePostRequest();
@@ -53,13 +53,28 @@ class UserController extends Controller
 		$this->redirectToPostedUrl();
 	}
 
-	public function actionSavePaymentEmail()
+	public function actionSaveUser()
 	{
 		$this->requirePostRequest();
 		$paymentEmail = Craft::$app->getRequest()->getRequiredBodyParam('paymentEmail');
+	
+		// set paymnet email
 		$user =  Craft::$app->getUser()->getIdentity();
-
 		Affiliate::$plugin->users->save($user,$paymentEmail);
+
+		// assign user to selected affiliate group
+		$affiliateGroup = str_replace("_","",Affiliate::$plugin->getSettings()->affiliateUserGroup);
+		$groupIds = [];
+		foreach ($user->getGroups() as $group) {
+			$groupIds[] = $group->id;
+		}
+
+		if(!in_array($affiliateGroup,$groupIds)) {
+			$groupIds[] = $affiliateGroup;
+			Craft::$app->getUsers()->assignUserToGroups($user->id, $groupIds);
+		}
+
+		exit();
 
 		$this->redirectToPostedUrl();
 	}

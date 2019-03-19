@@ -30,7 +30,7 @@ class Settings extends Model
      */
 	public $pendingDays = 0;
 	
-	public $affiliateUserGroup = [];
+	public $affiliateUserGroup = 0;
 
 	public $percentage = 0;
 
