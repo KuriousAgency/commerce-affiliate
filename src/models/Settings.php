@@ -46,6 +46,12 @@ class Settings extends Model
 
 	public $newCustomerEmailTemplate = "";
 
+	public $invoiceAddress = "";
+
+	public $businessTaxId = "";
+
+	public $invoicePdfTemplatePath = "";
+
     // Public Methods
     // =========================================================================
 

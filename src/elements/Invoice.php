@@ -11,6 +11,7 @@
 namespace kuriousagency\affiliate\elements;
 
 use kuriousagency\affiliate\Affiliate;
+use kuriousagency\affiliate\elements\Credit;
 
 use Craft;
 use craft\base\Element;
@@ -23,6 +24,7 @@ use kuriousagency\affiliate\AffiliateService;
 use kuriousagency\affiliate\elements\actions\InvoicePaid;
 use craft\commerce\Plugin as Commerce;
 use craft\helpers\UrlHelper;
+use craft\elements\User;
 use craft\commerce\helpers\Currency;
 
 use DateTime;
@@ -88,6 +90,10 @@ class Invoice extends Element
 
 	public $countryId;
 
+	public $toAddress;
+
+	public $toBusinessTaxId;
+
 	public $currency;
 
 	public $totalPrice;
@@ -95,6 +101,8 @@ class Invoice extends Element
 	public $paid;
 
 	public $paymentEmail;
+
+	private $_user;
 
 	
     // Static Methods
@@ -182,6 +190,56 @@ class Invoice extends Element
     {
         return $this->getShortNumber();
 	}
+
+	 /**
+     * Returns the URL to the order’s PDF invoice.
+     *
+     * @param string|null $option The option that should be available to the PDF template (e.g. “receipt”)
+     * @return string|null The URL to the order’s PDF invoice, or null if the PDF template doesn’t exist
+     */
+    public function getPdfUrl($option = null)
+    {
+		$url = null;
+		
+		try {
+			$pdf = Affiliate::$plugin->invoices->renderPdfForInvoice($this, $option);
+
+            if ($pdf) {
+				$path = "affiliate/invoices/pdf?number={$this->number}";
+				$path = Craft::$app->getConfig()->getGeneral()->actionTrigger . '/' . trim($path, '/');
+                $url = UrlHelper::siteUrl($path);
+            }
+        } catch (\Exception $exception) {
+            Craft::error($exception->getMessage());
+            return null;
+		}
+
+        return $url;
+	}
+	
+	public function getCredits()
+	{
+		$credits = Credit::find()
+				->invoiceId($this->id)
+				->status(null)
+				->all();
+
+		return $credits;
+	}
+
+	 /**
+     * Returns the User
+     *
+     * @return User
+     */
+    public function getUser(): User
+    {
+        if (null === $this->_user) {
+            $this->_user = Craft::$app->getUsers()->getUserById($this->userId);
+        }
+
+        return $this->_user;
+	}
 	
 	/**
      * @inheritdoc
@@ -259,6 +317,8 @@ class Invoice extends Element
 		return [];
 	}
 
+
+
 	 /**
      * @inheritdoc
      */
@@ -270,7 +330,7 @@ class Invoice extends Element
 	protected static function defineTableAttributes(): array
     {
         return [
-			'title' => ['label' => Craft::t('affiliate', 'Reference')],
+			'title' => ['label' => Craft::t('affiliate', 'Number')],
 			'name' => ['label' => Craft::t('affiliate', 'Name')],
 			'paymentEmail' => ['label' => Craft::t('affiliate', 'Payment Email')],
 			'totalPrice' => ['label' => Craft::t('affiliate', 'Total Price')],
@@ -357,7 +417,7 @@ class Invoice extends Element
         } else {
             $invoiceRecord = new InvoiceRecord();
             $invoiceRecord->id = $this->id;
-        }
+		}
 
         $invoiceRecord->number = $this->number;
         $invoiceRecord->userId = $this->userId;
@@ -375,7 +435,9 @@ class Invoice extends Element
         $invoiceRecord->stateName = $this->stateName;
         $invoiceRecord->countryId = $this->countryId;
         $invoiceRecord->totalPrice = $this->totalPrice;
-        $invoiceRecord->currency = $this->currency;
+		$invoiceRecord->currency = $this->currency;
+		$invoiceRecord->toAddress = $this->toAddress;
+		$invoiceRecord->toBusinessTaxId = $this->toBusinessTaxId;
         $invoiceRecord->paid = $this->paid;	
         $invoiceRecord->paymentEmail = $this->paymentEmail;
 

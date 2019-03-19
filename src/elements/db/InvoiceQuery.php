@@ -54,6 +54,10 @@ class InvoiceQuery extends ElementQuery
 
 	public $countryId;
 
+	public $toAddress;
+
+	public $toBusinessTaxId;
+
 	public $currency;
 
 	public $totalPrice;
@@ -198,6 +202,20 @@ class InvoiceQuery extends ElementQuery
         return $this;
 	}
 
+	public function toAddress($value)
+    {
+        $this->toAddress = $value;
+
+        return $this;
+	}
+
+	public function toBusinessTaxId($value)
+    {
+        $this->toBusinessTaxId = $value;
+
+        return $this;
+	}
+
 	public function currency($value)
     {
         $this->currency = $value;
@@ -207,9 +225,6 @@ class InvoiceQuery extends ElementQuery
 
 	public function paid($value)
     {
-		echo "here";
-		exit($value);
-		
 		$this->paid = $value;
 
         return $this;
@@ -251,6 +266,8 @@ class InvoiceQuery extends ElementQuery
 			'affiliate_invoices.businessId',
 			'affiliate_invoices.stateName',
 			'affiliate_invoices.countryId',
+			'affiliate_invoices.toAddress',
+			'affiliate_invoices.toBusinessTaxId',
 			'affiliate_invoices.totalPrice',
 			'affiliate_invoices.currency',
 			'affiliate_invoices.paid',
@@ -263,6 +280,10 @@ class InvoiceQuery extends ElementQuery
 
 		if ($this->lastName) {
             $this->subQuery->andWhere(Db::parseParam('affiliate_invoices.lastName', $this->lastName));
+		}
+
+		if ($this->number) {
+            $this->subQuery->andWhere(Db::parseParam('affiliate_invoices.number', $this->number));
 		}
 
         if ($this->zipCode) {

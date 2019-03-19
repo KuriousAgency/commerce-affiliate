@@ -17,6 +17,7 @@ use Craft;
 use craft\web\Controller;
 
 use craft\commerce\Plugin as Commerce;
+use verbb\giftvoucher\GiftVoucher;
 
 /**
  * @author    Kurious Agency
@@ -45,11 +46,42 @@ class CartController extends Controller
     public function actionCoupon()
     {
 		
-		// check if voucher code is affiliateRef-coupon
 		$this->requirePostRequest();
 
-		$couponCode = Craft::$app->getRequest()->getRequiredBodyParam('couponCode');
+		$couponCode = Craft::$app->getRequest()->getRequiredBodyParam('couponCode');	
 
+		// check referrer discount code isn't used on it's own without the referrer link
+		$discountCodeId = str_replace('_','',Affiliate::$plugin->getSettings()->newCustomerDiscountCodeId);
+		$discount = Commerce::getInstance()->getDiscounts()->getDiscountById($discountCodeId);
+
+		if(strcasecmp($couponCode, $discount->code) == 0) {
+			
+			$error = Craft::t('affiliate', 'Code is not valid');
+			Craft::$app->getSession()->setError($error);
+			return $this->redirectToPostedUrl();
+		}
+
+		// Check to see if this is a Gift Voucher code
+		$error = '';
+		if(GiftVoucher::$plugin->getCodes()->matchCode($couponCode,$error)) {
+
+			$params = [];
+
+			foreach(Craft::$app->getRequest()->getBodyParams() as $key=>$value) {
+				$params[$key] = $value;
+
+				if($key == 'couponCode') {
+					$params['voucherCode'] = $couponCode;
+				}
+			}
+
+			Craft::$app->getRequest()->setBodyParams($params);
+			$this->run('/gift-voucher/cart/add-code');
+			
+			return $this->redirectToPostedUrl();
+		}
+
+		// check if voucher code is affiliateRef-coupon
 		if(strpos($couponCode,"-") !== false) {
 
 			$couponCodeParts = explode("-",$couponCode);
@@ -74,11 +106,10 @@ class CartController extends Controller
 				}
 
 				Craft::$app->getRequest()->setBodyParams($params);
-
 			}
-			
 		}
 
+		// check standard commerce coupon code
 		$this->run('/commerce/cart/update-cart');
 
 	}

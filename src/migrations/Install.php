@@ -111,6 +111,8 @@ class Install extends Migration
 					'businessId' => $this->string(),
 					'stateName' => $this->string(),
 					'countryId' => $this->integer(),
+					'toAddress' => $this->text(),
+					'toBusinessTaxId' => $this->string(),
 					'totalPrice' => $this->decimal(14, 4)->defaultValue(0),
 					'currency' => $this->string(),
 					'paid' => $this->boolean()->notNull()->defaultValue(0),

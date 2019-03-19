@@ -2,11 +2,111 @@
 
 {% import "_includes/forms" as forms %}
 
-{% set title = 'Invoice ' ~ invoice.id %}
+{% set title = 'Invoice ' ~ invoice.shortNumber %}
+{% set pdfUrl = invoice.getPdfUrl(credits) %}
 
+{% block actionButton %}
+
+	{% if pdfUrl %}
+		<a class="btn" href="{{ invoice.getPdfUrl(credits) }}" target="_blank">{{ 'Download PDF Invoice'|t('affiliate') }}</a>
+		<div class="flex-grow"></div>
+	{% endif %}
+
+{% endblock %}
 
 {% block content %}
-<h2>Billing Address</h2>
+
+	<h2>Billing Address</h2>
+	{{ invoice.firstName ~ ' ' ~ invoice.lastName }}<br>
+	{{ invoice.address1 }}<br>
+	{{ invoice.address2 ? invoice.address2 ~ "<br>"|raw : "" }}
+	{{ invoice.address2 ? invoice.address2 ~ "<br>"|raw : "" }}
+	{{ invoice.city }}<br>
+	{{ invoice.zipCode }}<br>
+	<br>
+	{{ invoice.phone ? (invoice.phone ~ "<br>")|raw : "" }}
+	{{ invoice.alternativePhone ? (invoice.alternativePhone ~ "<br>")|raw : "" }}
+
+	<div class="pane">
+		<table id="" class="data fullwidth">
+			<thead>
+				<tr>
+					<th>Referred Order Number</th>
+					<th>Referred Customer</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for credit in credits %}
+					<tr>
+						<td><a href="{{ credit.orderEditUrl }}">{{ credit.order.shortNumber}}</a></td>
+						<td>{{ credit.order.email}}</td>
+						<td>{{ credit.totalPrice|currency(invoice.currency) }}</td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td></td>
+					<td><h2>Total</h2></td>
+					<td><strong>{{ invoice.totalPrice|currency(invoice.currency) }}</strong></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+{% endblock %}
+
+{% block details %}
+<div class="meta read-only">
+	<div class="data">
+		<div class="heading">
+			Date
+		</div>
+		<div class="value">
+			{{ invoice.dateCreated|date() }}
+		</div>
+	</div>
+	<div class="data">
+		<div class="heading">
+			Number
+		</div>
+		<div class="value">
+			{{ invoice.shortNumber }}
+		</div>
+	</div>
+	<div class="data">
+		<div class="heading">
+			Customer
+		</div>
+		<div class="value">
+			{{ invoice.user }}
+		</div>
+	</div>
+	<div class="data">
+		<div class="heading">
+			Total
+		</div>
+		<div class="value">
+			{{ invoice.totalPrice|currency(invoice.currency) }}
+		</div>
+	</div>
+	<div class="data">
+		<div class="heading">
+			Payment Email
+		</div>
+		<div class="value">
+			{{ invoice.paymentEmail }}
+		</div>
+	</div>
+	<div class="data">
+		<div class="heading">
+			Paid Status
+		</div>
+		<div class="value">
+			{{ invoice.paid == 1 ? "Paid" : "Unpaid" }}
+		</div>
+	</div>
+
+</div>
 {% endblock %}
 
 

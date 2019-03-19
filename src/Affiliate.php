@@ -96,7 +96,8 @@ class Affiliate extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                $event->rules['affiliate/invoices/<id:\d+>'] = 'affiliate/invoices/edit';
+				$event->rules['affiliate/invoices/<id:\d+>'] = 'affiliate/invoices/edit';
+				$event->rules['affiliate/settings/general'] = 'affiliate/settings/edit';
             }
         );
 
@@ -248,8 +249,6 @@ class Affiliate extends Plugin
 			}
 		}
 
-
-
         Craft::info(
             Craft::t(
                 'affiliate',
@@ -258,6 +257,33 @@ class Affiliate extends Plugin
             ),
             __METHOD__
         );
+	}
+	
+	public function getCpNavItem()
+    {
+        $ret = parent::getCpNavItem();
+
+		$ret['label'] = $this->name;
+
+		$ret['subnav']['invoices'] = [
+			'label' => 'Invoices',
+			'url'   => 'affiliate/invoices',
+		];
+
+		$ret['subnav']['credits'] = [
+			'label' => 'Credits',
+			'url'   => 'affiliate/credits',
+		];
+
+		
+		$ret['subnav']['settings'] = [
+			'label' => 'Settings',
+			'url'   => 'affiliate/settings/general',
+		];
+
+
+       
+        return $ret;
     }
 
     // Protected Methods

@@ -46,15 +46,15 @@ class CreditQuery extends ElementQuery
     /**
      * @inheritdoc
      */
-    public function __construct(string $elementType, array $config = [])
-    {
-        // Default status
-        if (!isset($config['status'])) {
-            $config['status'] = Credit::STATUS_PENDING;
-        }
+    // public function __construct(string $elementType, array $config = [])
+    // {
+    //     // Default status
+    //     if (!isset($config['status'])) {
+    //         $config['status'] = Credit::STATUS_PENDING;
+    //     }
 
-        parent::__construct($elementType, $config);
-	}
+    //     parent::__construct($elementType, $config);
+	// }
 
 	public function userId($value)
     {

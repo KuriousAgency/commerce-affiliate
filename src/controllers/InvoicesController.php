@@ -16,6 +16,8 @@ use kuriousagency\affiliate\elements\Invoice;
 
 use Craft;
 use craft\web\Controller;
+use yii\web\HttpException;
+use yii\web\Response;
 
 use craft\commerce\Plugin as Commerce;
 
@@ -78,8 +80,6 @@ class InvoicesController extends Controller
 
 			$invoice = new Invoice();
 			$invoice->number = Affiliate::$plugin->invoices->generateCartNumber();
-			$invoice->totalPrice = $invoiceTotal;
-			$invoice->currency = $invoiceTotal;
 			$invoice->userId = $user->id;
 			$invoice->firstName = $billingAddress->firstName;
 			$invoice->lastName = $billingAddress->lastName;
@@ -94,7 +94,11 @@ class InvoicesController extends Controller
 			$invoice->businessId = $billingAddress->businessId;
 			$invoice->stateName = $billingAddress->stateName;
 			$invoice->countryId = $billingAddress->countryId;
+			$invoice->toAddress = Affiliate::$plugin->getSettings()->invoiceAddress;
+			$invoice->toBusinessTaxId = Affiliate::$plugin->getSettings()->businessTaxId;
+			$invoice->totalPrice = $invoiceTotal;
 			$invoice->currency = $currency;
+			$invoice->paid = 0;
 			$invoice->paymentEmail = $affiliateUser['paymentEmail'];
 
 
@@ -120,8 +124,15 @@ class InvoicesController extends Controller
 					->id($id)
 					->one();
 
+		$credits = Credit::find()
+			->invoiceId($id)
+			->status(null)
+			->all();
+
 		$variables = [
 			'invoice'=>$invoice,
+			'credits'=>$credits,
+
 		];
 		
 		return $this->renderTemplate('affiliate/invoices/edit', $variables);
@@ -136,5 +147,29 @@ class InvoicesController extends Controller
 		
 		Craft::$app->getElements()->saveElement($credit, false);
 	}
+
+	public function actionPdf(): Response
+    {
+        $number = Craft::$app->getRequest()->getQueryParam('number','1');
+        $option = Craft::$app->getRequest()->getQueryParam('option', '');
+		// $order = Plugin::getInstance()->getOrders()->getOrderByNumber($number);
+		$invoice = Invoice::find()
+							->number($number)
+							->one();
+
+        if (!$invoice) {
+            throw new HttpException('No Invoice Found');
+        }
+
+		$pdf = Affiliate::$plugin->invoices->renderPdfForInvoice($invoice, $option);
+
+	    $fileName = 'Invoice-' . $invoice->number;
+
+        return Craft::$app->getResponse()->sendContentAsFile($pdf, $fileName . '.pdf', [
+            'mimeType' => 'application/pdf'
+        ]);
+	}
+	
+	
    
 }

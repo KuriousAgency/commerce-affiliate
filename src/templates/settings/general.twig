@@ -1,0 +1,183 @@
+
+{% extends "_layouts/cp" %}
+
+{% set fullPageForm = true %}
+
+{% import "_includes/forms" as forms %}
+
+{% set title = 'Settings' %}
+{% set selectedSubnavItem = 'settings' %}
+{% block content %}
+
+{% do view.registerAssetBundle("kuriousagency\\affiliate\\assetbundles\\affiliate\\AffiliateAsset") %}
+
+<h2>General</h2>
+
+{{ forms.hidden({
+	name: 'action',
+      value: 'plugins/save-plugin-settings'
+})}}
+
+{{ forms.hidden({
+	name: 'pluginHandle',
+	value: plugin.handle
+})}}
+
+ {{ forms.textareaField({
+    label: 'Invoice Address',
+    instructions: 'Please enter your invoice address',
+    id: 'invoiceAddress',
+    name: 'settings[invoiceAddress]',
+    value: settings['invoiceAddress'],
+	rows: 8,
+}) }}
+
+{{ forms.textField({
+    label: 'VAT/Tax Number',
+    instructions: 'Please enter your VAT/Tax number',
+    id: 'businessTaxId',
+    name: 'settingsbusinessTaxId]',
+    value: settings['businessTaxId']
+}) }}
+
+{% if currentUser.admin %}
+	{{ forms.textField({
+		label: 'PDF Template Path',
+		instructions: 'Please enter the path to the template for the invoice PDF.',
+		id: 'invoicePdfTemplatePath',
+		name: 'settings[invoicePdfTemplatePath]',
+		value: settings['invoicePdfTemplatePath']
+	}) }}
+{% endif %}
+
+<h2>Affiliate</h2>
+
+{% if currentUser.admin %}
+	{% set assignableGroups = craft.app.userGroups.getAssignableGroups(currentUser) %}
+	{% set currentGroupIds = settings['affiliateUserGroup'] is defined ? settings['affiliateUserGroup'] : [] %}
+
+	{% set userGroupsInput %}
+		<input type="hidden" name="affiliateUserGroup[]" value="">
+
+		{% if assignableGroups %}
+			<ul>
+				{% for group in assignableGroups %}
+					<li>
+						{{ forms.checkbox({
+							label: group.name|t('site')|e,
+							name: 'settings[affiliateUserGroup[]]',
+							value: group.id,
+							checked: (group.id in currentGroupIds)
+						}) }}
+					</li>
+				{% endfor %}
+			</ul>
+		{% else %}
+			<p>{{ "No user groups exist yet."|t('app') }}</p>
+		{% endif %}
+	{% endset %}
+
+	{{ forms.field({
+		label: 'Affiliate User Group',
+		fieldId: 'affiliateUserGroup',
+		instructions: 'Please select the user groups to be used for Affiliates.',
+	}, userGroupsInput) }}
+{% endif %}
+
+{{ forms.textField({
+    label: 'Pending Days',
+    instructions: 'Please enter the number of days before a pending credit is available.',
+    id: 'pendingDays',
+    name: 'settings[pendingDays]',
+    value: settings['pendingDays']
+}) }}
+
+{{ forms.textField({
+    label: 'Percentage',
+    instructions: 'Please enter the percentage an affilate receives',
+    id: 'percentage',
+    name: 'settings[percentage]',
+    value: settings['percentage']
+}) }}
+
+
+{# currency exchange rates #}
+{% set currencies = craft.commerce.paymentCurrencies.allPaymentCurrencies %}
+
+{% if currencies|length > 1 %}
+	
+	<div class="field">
+		<div class="heading">
+			<label>Currency Exchange Rates</label>
+			<div class="instructions">
+				<p>Please enter the exchange rates to use when calculating affilate percentages. For example a new customer places an order in USD how much should the affiliate recieve in GBP</p>
+			</div>
+		</div>
+	</div>
+	
+	{% for currency in currencies %}
+		{{ forms.textField({
+			label: currency.iso,
+			id: 'exchangeRates',
+			name: 'settings[exchangeRates['~currency.iso~']]',
+			value: settings['exchangeRates'][currency.iso] is defined ? settings['exchangeRates'][currency.iso] : ""
+		}) }}
+	{% endfor %}
+{% endif %}
+
+<h2>New Customers</h2>
+
+{% set discounts = craft.commerce.discounts.allDiscounts %}
+{% set discountOptions = [] %}
+
+{% for discount in discounts %}
+	{% set discountOptions = discountOptions|merge({('_'~discount.id): (discount.code)}) %}
+{% endfor %}
+
+{{ forms.selectField({
+	label: 'New Customer Discount Code',
+	instructions: 'Please select the discount code to use for new customers',
+	id: 'newCustomerDiscountCodeId',
+	name: 'settings[newCustomerDiscountCodeId]',
+	value: settings['newCustomerDiscountCodeId'],
+	options: discountOptions
+}) }}
+
+{% if currentUser.admin %}
+	{{ forms.textField({
+		label: 'New Customer Template Path',
+		instructions: 'Please enter the path to the template where new referred customers should be taken',
+		id: 'newCustomerTemplatePath',
+		name: 'settings[newCustomerTemplatePath]',
+		value: settings['newCustomerTemplatePath']
+	}) }}
+
+	{{ forms.textField({
+		label: 'New Customer Email Template Path',
+		instructions: 'Please enter the path to the email template new referred customers are sent',
+		id: 'newCustomerEmailTemplate',
+		name: 'settings[newCustomerEmailTemplate]',
+		value: settings['newCustomerEmailTemplate']
+	}) }}
+{% endif %}
+
+<h2>Referrer</h2>
+{% if currentUser.admin %}
+	{{ forms.textField({
+		label: 'Referrer Voucher Email Template Path',
+		instructions: 'Please enter the path to the email template referrer customers are sent',
+		id: 'voucherEmailTemplate',
+		name: 'settings[voucherEmailTemplate]',
+		value: settings['voucherEmailTemplate']
+	}) }}
+{% endif %}
+
+{{ forms.textField({
+    label: 'Gift Voucher Expiry Months',
+    instructions: 'Please enter how many months a gift voucher is valid for (default is 12)',
+    id: 'voucherExpiryMonths',
+    name: 'settings[voucherExpiryMonths]',
+    value: settings['voucherExpiryMonths']
+}) }}
+
+{% endblock %}
