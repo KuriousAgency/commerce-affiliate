@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">   
+</head>
+
+<body>
+	Invoice Number: {{ invoice.shortNumber }}<br>
+	Date: {{ invoice.dateCreated|date() }}<br>
+	Payment Email: {{ invoice.paymentEmail }}
+	<br>
+	<br>
+	<table>
+		<thead>
+			<tr>
+				<th>To</th>
+				<th>From</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>
+					{{ invoice.toAddress|nl2br }}
+					{{ invoice.toBusinessTaxId }}
+				</td>
+				<td>
+					{{ invoice.firstName ~ ' ' ~ invoice.lastName }}<br>
+					{{ invoice.address1 }}<br>
+					{{ invoice.address2 ? invoice.address2 ~ "<br>"|raw : "" }}
+					{{ invoice.address2 ? invoice.address2 ~ "<br>"|raw : "" }}
+					{{ invoice.city }}<br>
+					{{ invoice.zipCode }}<br>
+					{{ invoice.toBusinessTaxId }}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<table>
+			<thead>
+				<tr>
+					<th>Order Date</th>
+					<th>Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for credit in invoice.getCredits() %}
+					<tr>
+						<td>{{ credit.dateCreated|date() }}</td>
+						<td>{{ credit.totalPrice|currency(invoice.currency) }}</td>
+					</tr>
+				{% endfor %}
+				<tr>
+					<td><h2>Total</h2></td>
+					<td><strong>{{ invoice.totalPrice|currency(invoice.currency) }}</strong></td>
+				</tr>
+			</tbody>
+		</table>
+</body>
+</html>
