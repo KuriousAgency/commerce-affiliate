@@ -97,6 +97,19 @@ class InvoiceQuery extends ElementQuery
         return $this;
 	}
 
+	public function user($value)
+    {
+		$user = $value;
+		
+		if ($user instanceof User) {
+            $this->userId = $user->id ?? null;
+        } else {
+            $this->userId = null;
+        }
+
+        return $this;
+    }
+
 	public function userId($value)
     {
         $this->userId = $value;

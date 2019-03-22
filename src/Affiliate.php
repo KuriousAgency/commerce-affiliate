@@ -13,7 +13,7 @@ namespace kuriousagency\affiliate;
 use kuriousagency\affiliate\services\Users as UsersService;
 use kuriousagency\affiliate\services\Vouchers as VouchersService;
 use kuriousagency\affiliate\services\Invoices as InvoicesService;
-use kuriousagency\affiliate\variables\AffiliateVariable;
+// use kuriousagency\affiliate\variables\AffiliateVariable;
 use kuriousagency\affiliate\models\Settings;
 use kuriousagency\affiliate\fields\AffiliateField as AffiliateFieldField;
 use kuriousagency\affiliate\web\twig\CraftVariableBehavior;
@@ -123,7 +123,7 @@ class Affiliate extends Plugin
                 /** @var CraftVariable $variable */
 				$variable = $event->sender;
 				$variable->attachBehavior('affiliate', CraftVariableBehavior::class);
-                $variable->set('affiliate', AffiliateVariable::class);
+                // $variable->set('affiliate', AffiliateVariable::class);
             }
         );
 

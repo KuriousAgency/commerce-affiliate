@@ -219,16 +219,37 @@ class Users extends Component
 
 	}
 
+	public function getPaymentEmail()
+	{
+		$user = Craft::$app->getUser()->getIdentity();
+		
+		$row = $this->_createUserTrackingQuery()
+		->where(['userId' => $user->id])
+		->one();
+
+		return $row['paymentEmail'];
+	}
+
+	public function getTrackingRef()
+	{
+		$user = Craft::$app->getUser()->getIdentity();
+		
+		$row = $this->_createUserTrackingQuery()
+		->where(['userId' => $user->id])
+		->one();
+
+		return $row['trackingRef'];
+	}
 
 	private function _createTrackingRef()
     {
 		$code = StringHelper::randomString(8);
 		
-		$result = $this->_createUserTrackingQuery()
+		$row = $this->_createUserTrackingQuery()
 		->where(['trackingRef' => $code])
 		->one();
 
-        if(!$result) {
+        if(!$row) {
             return $code;
         } else {
             return $this->_createTrackingRef();

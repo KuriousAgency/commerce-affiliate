@@ -8,6 +8,7 @@
 namespace kuriousagency\affiliate\web\twig;
 
 use Craft;
+use kuriousagency\affiliate\Affiliate;
 use kuriousagency\affiliate\elements\db\CreditQuery;
 use kuriousagency\affiliate\elements\Credit;
 use kuriousagency\affiliate\elements\db\InvoiceQuery;
@@ -27,14 +28,14 @@ class CraftVariableBehavior extends Behavior
     /**
      * @var Plugin
      */
-    // public $commerce;
+	public $affiliate;
 
     public function init()
     {
         parent::init();
 
-        // Point `craft.commerce` to the craft\commerce\Plugin instance
-        // $this->commerce = Plugin::getInstance();
+        // Point `craft.affiliate` to the kuriousagency\affiliate\Affiliate instance		
+		$this->affiliate = Affiliate::getInstance();
     }
 
    

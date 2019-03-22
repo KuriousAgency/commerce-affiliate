@@ -56,6 +56,19 @@ class CreditQuery extends ElementQuery
     //     parent::__construct($elementType, $config);
 	// }
 
+	public function user($value)
+    {
+		$user = $value;
+		
+		if ($value instanceof User) {
+            $this->userId = $user->id ?? null;
+        } else {
+            $this->userId = null;
+        }
+
+        return $this;
+    }
+
 	public function userId($value)
     {
         $this->userId = $value;

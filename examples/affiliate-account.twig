@@ -1,0 +1,5 @@
+{% set credits  = craft.credits.user(currentUser).all() %}
+{% set invoices  = craft.invoices.user(currentUser).all() %}
+
+{{ craft.affiliate.users.paymentEmail }}
+{{ craft.affiliate.users.trackingRef }}
