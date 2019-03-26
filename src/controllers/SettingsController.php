@@ -42,13 +42,7 @@ class SettingsController extends Controller
 	public function actionEdit(): Response
     {
 		$settings = Affiliate::getInstance()->getSettings();
-
-		// Craft::dd($settings);
-
-        // $craftSettings = App::mailSettings();
-        // $settings->emailSenderAddressPlaceholder = $craftSettings['fromEmail'] ?? '';
-		// $settings->emailSenderNamePlaceholder = $craftSettings['fromName'] ?? ''; 
-		
+				
 		$plugin = Affiliate::$plugin;
 
         $variables = [

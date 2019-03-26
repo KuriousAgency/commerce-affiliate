@@ -39,19 +39,19 @@ class UsersController extends Controller
     // Public Methods
     // =========================================================================
 
-    /**
-	 * send email to customer with referrer link and voucher code
-     */
-    public function actionTestNewCustomerEmail()
-    {
+    // /**
+	//  * send email to customer with referrer link and voucher code
+    //  */
+    // public function actionTestNewCustomerEmail()
+    // {
 		
-		$this->requirePostRequest();
-		$email = Craft::$app->getRequest()->getRequiredBodyParam('email');
+	// 	$this->requirePostRequest();
+	// 	$email = Craft::$app->getRequest()->getRequiredBodyParam('email');
 
-		Affiliate::$plugin->users->sendNewCustomerEmail($email);
+	// 	Affiliate::$plugin->users->sendNewCustomerEmail($email);
 
-		$this->redirectToPostedUrl();
-	}
+	// 	$this->redirectToPostedUrl();
+	// }
 
 	public function actionSaveUser()
 	{
@@ -74,8 +74,6 @@ class UsersController extends Controller
 			$groupIds[] = $affiliateGroup;
 			Craft::$app->getUsers()->assignUserToGroups($user->id, $groupIds);
 		}
-
-		exit();
 
 		$this->redirectToPostedUrl();
 	}

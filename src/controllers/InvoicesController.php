@@ -45,7 +45,7 @@ class InvoicesController extends Controller
     public function actionCreate()
 	{
 	
-		// $this->requirePostRequest();
+		$this->requirePostRequest();
 
 		$validCreditIds = [];
 		$invoiceTotal = 0;
@@ -64,7 +64,6 @@ class InvoicesController extends Controller
 		if($credits) {
 
 			foreach($credits as $credit) {
-				// $creditIds[] = $credit->id;
 				$invoiceTotal += $credit->totalPrice;
 			}
 
@@ -105,10 +104,7 @@ class InvoicesController extends Controller
 			$invoice->paid = 0;
 			$invoice->paymentEmail = $affiliateUser['paymentEmail'];
 
-
 			Craft::$app->getElements()->saveElement($invoice, false);
-
-			// Craft::dd($creditIds);
 
 			foreach($credits as $credit)
 			{
@@ -117,7 +113,7 @@ class InvoicesController extends Controller
 			}
 		}
 
-		Craft::$app->end();
+		$this->redirectToPostedUrl();
 
 	}
 

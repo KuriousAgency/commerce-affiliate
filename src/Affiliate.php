@@ -139,17 +139,17 @@ class Affiliate extends Plugin
 		Event::on(Order::class, Order::EVENT_AFTER_COMPLETE_ORDER, function(Event $e){
 			$order = $e->sender;
 
-			// check order user is not the same as the current user
-
 			//check if affilate order and store credits
 			if(Craft::$app->session->get('userRef')) {
 
 				// store tracking ref in order tracking table
 				Affiliate::$plugin->users->saveOrderTracking($order->id,Craft::$app->session->get('userRef'));
-					
 				$affiliateUser = Affiliate::$plugin->users->getUserByTrackingRef(Craft::$app->session->get('userRef'));
 
-				if($affiliateUser) {
+				$userId = $order->user ? $order->user->id : '';
+
+				// check order user is not the same as the affiliate user
+				if($affiliateUser && ($affiliateUser->id != $userId)) {
 
 					// check if affiliate
 					if(Affiliate::$plugin->users->checkUserAffiliateGroup($affiliateUser)) {
@@ -175,7 +175,7 @@ class Affiliate extends Plugin
 					} 
 					// referrer send gift voucher if this is new customers first order
 					else {
-						Affiliate::$plugin->voucher->referrerVoucher($affiliateUser,$order);
+						Affiliate::$plugin->vouchers->referrerVoucher($affiliateUser,$order);
 					}
 
 				}
@@ -227,22 +227,23 @@ class Affiliate extends Plugin
 
 		});
 
-		if(Craft::$app->request->getQueryParam('affref')) {
+		if(!Craft::$app->getRequest()->isConsoleRequest) {
 
-			$userTrackingRef = Craft::$app->request->getQueryParam('affref');
+			if(Craft::$app->request->getQueryParam('affref')) {
 
-			Craft::$app->session->set('userRef',$userTrackingRef);
+				$userTrackingRef = Craft::$app->request->getQueryParam('affref');
+				Craft::$app->session->set('userRef',$userTrackingRef);
 
-			// send to template path if referer
-			$user = Affiliate::$plugin->users->getUserByTrackingRef($userTrackingRef);
-			
-			// if not an affiliate redirect to new customer page
-			if(!Affiliate::$plugin->users->checkUserAffiliateGroup($user)) {
+				$user = Affiliate::$plugin->users->getUserByTrackingRef($userTrackingRef);
+				
+				// if not an affiliate redirect to new customer page
+				if(!Affiliate::$plugin->users->checkUserAffiliateGroup($user)) {
 
-				$redirectUrl = Affiliate::$plugin->getSettings()->newCustomerTemplatePath ? Affiliate::$plugin->getSettings()->newCustomerTemplatePath : "/";
+					$redirectUrl = Affiliate::$plugin->getSettings()->newCustomerTemplatePath ? Affiliate::$plugin->getSettings()->newCustomerTemplatePath : "/";
 
-				Craft::$app->getResponse()->redirect($redirectUrl)->send();
-				Craft::$app->end();
+					Craft::$app->getResponse()->redirect($redirectUrl)->send();
+					Craft::$app->end();
+				}
 			}
 		}
 
