@@ -12,6 +12,7 @@ namespace kuriousagency\affiliate\controllers;
 
 use kuriousagency\affiliate\Affiliate;
 use kuriousagency\affiliate\elements\Credit;
+use kuriousagency\emailsubscriptions\EmailSubscriptions;
 
 use Craft;
 use craft\web\Controller;
