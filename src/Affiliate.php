@@ -239,7 +239,7 @@ class Affiliate extends Plugin
 				// if not an affiliate redirect to new customer page
 				if(!Affiliate::$plugin->users->checkUserAffiliateGroup($user)) {
 
-					$redirectUrl = Affiliate::$plugin->getSettings()->newCustomerTemplatePath ? Affiliate::$plugin->getSettings()->newCustomerTemplatePath : "/";
+					$redirectUrl = Affiliate::$plugin->getSettings()->newCustomerPage ? Affiliate::$plugin->getSettings()->newCustomerPage : "/";
 
 					Craft::$app->getResponse()->redirect($redirectUrl)->send();
 					Craft::$app->end();

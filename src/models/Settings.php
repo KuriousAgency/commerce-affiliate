@@ -40,7 +40,7 @@ class Settings extends Model
 	
 	public $voucherEmailTemplate = "";	
 
-	public $newCustomerTemplatePath = "";
+	public $newCustomerPage = "";
 
 	public $newCustomerDiscountCodeId = "";
 

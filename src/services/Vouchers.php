@@ -132,7 +132,7 @@ class Vouchers extends Component
 
 			if (!Craft::$app->getMailer()->send($newEmail)) {
 			
-				$error = Craft::t('Affiliate', 'Email Error');
+				$error = Craft::t('affiliate', 'Email Error');
 	
 				Craft::error($error, __METHOD__);
 				
@@ -143,7 +143,7 @@ class Vouchers extends Component
 			}
 
 		} else {
-			$error = Craft::t('Affiliate', 'Template not found “{code}”.', [
+			$error = Craft::t('affiliate', 'Template not found “{code}”.', [
 				'code' => $code->codeKey
 			]);
 

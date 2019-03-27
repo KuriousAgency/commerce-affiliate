@@ -101,7 +101,9 @@ class Users extends Component
 			$record = new UserTrackingRecord();
 			$record->userId = $user->id;
 			$record->trackingRef = $this->_createTrackingRef();
-		} elseif($paymentEmail) {
+		}
+
+		if($paymentEmail) {
 			$record->paymentEmail = $paymentEmail;
 		}
 
@@ -169,7 +171,7 @@ class Users extends Component
 		$templatePath = "";
 		$renderVariables = [
 		   'customerCode' => $customerCode,
-		   'handle' => 'newCustomerDiscount'
+		   'handle' => 'newReferredCustomer'
         ];
 
 		$originalLanguage = Craft::$app->language;
@@ -194,7 +196,7 @@ class Users extends Component
 
 			if (!Craft::$app->getMailer()->send($newEmail)) {
 			
-				$error = Craft::t('Affiliate', 'Email Error');
+				$error = Craft::t('affiliate', 'Email Error');
 	
 				Craft::error($error, __METHOD__);
 				
@@ -205,7 +207,7 @@ class Users extends Component
 			}
 
 		} else {
-			$error = Craft::t('Affiliate', 'Template not found “{code}”.', [
+			$error = Craft::t('affiliate', 'Template not found “{code}”.', [
 				'code' => $customerCode
 			]);
 
@@ -239,6 +241,13 @@ class Users extends Component
 		->one();
 
 		return $row['trackingRef'];
+	}
+
+	public function getAffiliateUserGroupId()
+	{
+		$affiliateUserGroup = Affiliate::$plugin->getSettings()->affiliateUserGroup;
+		
+		return $affiliateUserGroup ? str_replace('_','',$affiliateUserGroup) : '';
 	}
 
 	private function _createTrackingRef()

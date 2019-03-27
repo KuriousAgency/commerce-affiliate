@@ -164,11 +164,11 @@
 
 {% if currentUser.admin %}
 	{{ forms.textField({
-		label: 'New Customer Template Path',
-		instructions: 'Please enter the path to the template where new referred customers should be taken',
-		id: 'newCustomerTemplatePath',
-		name: 'settings[newCustomerTemplatePath]',
-		value: settings['newCustomerTemplatePath']
+		label: 'New Customer Page',
+		instructions: 'Please enter the page new customers should be redirected to',
+		id: 'newCustomerPage',
+		name: 'settings[newCustomerPage]',
+		value: settings['newCustomerPage']
 	}) }}
 
 	{{ forms.textField({

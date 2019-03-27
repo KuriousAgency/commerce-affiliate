@@ -39,19 +39,24 @@ class UsersController extends Controller
     // Public Methods
     // =========================================================================
 
-    // /**
-	//  * send email to customer with referrer link and voucher code
-    //  */
-    // public function actionTestNewCustomerEmail()
-    // {
-		
-	// 	$this->requirePostRequest();
-	// 	$email = Craft::$app->getRequest()->getRequiredBodyParam('email');
+    /**
+	 * send email to customer with referrer link and voucher code
+     */
+    public function actionNewCustomerEmail()
+    {
+		$this->requirePostRequest();
+		$email = Craft::$app->getRequest()->getRequiredBodyParam('email');
 
-	// 	Affiliate::$plugin->users->sendNewCustomerEmail($email);
+		Affiliate::$plugin->users->sendNewCustomerEmail($email);
 
-	// 	$this->redirectToPostedUrl();
-	// }
+		$listIds = Craft::$app->getRequest()->getBodyParam('lists', []);
+
+		if($listIds) {
+			EmailSubscriptions::$plugin->service->update($email, $listIds);
+		}
+
+		$this->redirectToPostedUrl();
+	}
 
 	public function actionSaveUser()
 	{
