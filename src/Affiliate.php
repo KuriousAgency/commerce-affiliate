@@ -37,6 +37,8 @@ use craft\elements\User;
 use craft\commerce\elements\Order;
 use craft\commerce\events\RefundTransactionEvent;
 use craft\commerce\services\Payments;
+use craft\commerce\events\OrderStatusEvent;
+use craft\commerce\services\OrderHistories;
 
 use yii\base\Event;
 
@@ -225,6 +227,25 @@ class Affiliate extends Plugin
 
 			}
 
+		});
+
+		Event::on(OrderHistories::class, OrderHistories::EVENT_ORDER_STATUS_CHANGE, function(OrderStatusEvent $e) {
+			$order = $e->order;
+
+            if($order->orderStatus->handle == "cancelled") {
+				
+				$credit = Credit::find()
+					->orderId($order->id)
+					->invoiceId(null)
+					// ->status('pending')
+					->one();
+
+				if($credit) {
+					$credit->totalPrice = 0.00;
+					Craft::$app->getElements()->saveElement($credit, false);
+				}
+
+            }
 		});
 
 		if(!Craft::$app->getRequest()->isConsoleRequest) {

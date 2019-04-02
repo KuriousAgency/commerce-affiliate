@@ -175,6 +175,14 @@ class Credit extends Element
 
         return null;
 	}
+
+	public function getDateApproved()
+	{
+		$approvedDate = $this->dateCreated;
+		$approvedDate->add(new DateInterval('P'.Affiliate::$plugin->getSettings()->pendingDays.'D'));
+
+		return $approvedDate;
+	}
 	
 	 /**
      * Returns the link for editing the order that purchased this license.
