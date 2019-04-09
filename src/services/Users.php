@@ -160,8 +160,10 @@ class Users extends Component
 	{
 	
 		if(Craft::$app->session->get('userRef')) {
-			
-			$affiliateUser = Affiliate::$plugin->users->getUserByTrackingRef(Craft::$app->session->get('userRef'));
+
+			$user = $this->getUserByTrackingRef(Craft::$app->session->get('userRef'));
+
+			$affiliateUser = $this->getAffiliateUserByUserId($user->id);
 
 			$discountCodeId = str_replace('_','',Affiliate::$plugin->getSettings()->newCustomerDiscountCodeId);
 			
