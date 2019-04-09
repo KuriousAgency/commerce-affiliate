@@ -35,7 +35,7 @@ class UsersController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = [];
+    protected $allowAnonymous = ['new-customer-email'];
 
     // Public Methods
     // =========================================================================

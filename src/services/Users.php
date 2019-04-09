@@ -158,64 +158,67 @@ class Users extends Component
 
 	public function sendNewCustomerEmail($email)
 	{
-		$user =  Craft::$app->getUser()->getIdentity();
-		$affiliateUser = $this->getAffiliateUserByUserId($user->id);
-
-		$discountCodeId = str_replace('_','',Affiliate::$plugin->getSettings()->newCustomerDiscountCodeId);
-		
-		// get selected discount code
-		$discount = Commerce::getInstance()->getDiscounts()->getDiscountById($discountCodeId);
-
-		$customerCode = $affiliateUser['trackingRef'] . "-" . $discount->code;
-
-		$templatePath = "";
-		$renderVariables = [
-		   'customerCode' => $customerCode,
-		   'handle' => 'newReferredCustomer'
-        ];
-
-		$originalLanguage = Craft::$app->language;
-
-		$templatePath = Affiliate::$plugin->getSettings()->newCustomerEmailTemplate;
-
-		$view = Craft::$app->getView();
-		$oldTemplateMode = $view->getTemplateMode();
-
-		Craft::$app->language = $originalLanguage;
-		$view->setTemplateMode($view::TEMPLATE_MODE_SITE);
-
-		if($view->doesTemplateExist($templatePath)) {
-
-			$newEmail = new Message();
-			$newEmail->setTo($email);
-			$newEmail->setFrom(Craft::$app->systemSettings->getEmailSettings()->fromEmail);
-			$newEmail->setSubject('');
-			$newEmail->variables = $renderVariables;
-			$body = $view->renderTemplate($templatePath, $renderVariables);
-			$newEmail->setHtmlBody($body);
-
-			if (!Craft::$app->getMailer()->send($newEmail)) {
+	
+		if(Craft::$app->session->get('userRef')) {
 			
-				$error = Craft::t('affiliate', 'Email Error');
-	
-				Craft::error($error, __METHOD__);
+			$affiliateUser = Affiliate::$plugin->users->getUserByTrackingRef(Craft::$app->session->get('userRef'));
+
+			$discountCodeId = str_replace('_','',Affiliate::$plugin->getSettings()->newCustomerDiscountCodeId);
+			
+			// get selected discount code
+			$discount = Commerce::getInstance()->getDiscounts()->getDiscountById($discountCodeId);
+
+			$customerCode = $affiliateUser['trackingRef'] . "-" . $discount->code;
+
+			$templatePath = "";
+			$renderVariables = [
+			'customerCode' => $customerCode,
+			'handle' => 'newReferredCustomer'
+			];
+
+			$originalLanguage = Craft::$app->language;
+
+			$templatePath = Affiliate::$plugin->getSettings()->newCustomerEmailTemplate;
+
+			$view = Craft::$app->getView();
+			$oldTemplateMode = $view->getTemplateMode();
+
+			Craft::$app->language = $originalLanguage;
+			$view->setTemplateMode($view::TEMPLATE_MODE_SITE);
+
+			if($view->doesTemplateExist($templatePath)) {
+
+				$newEmail = new Message();
+				$newEmail->setTo($email);
+				$newEmail->setFrom(Craft::$app->systemSettings->getEmailSettings()->fromEmail);
+				$newEmail->setSubject('');
+				$newEmail->variables = $renderVariables;
+				$body = $view->renderTemplate($templatePath, $renderVariables);
+				$newEmail->setHtmlBody($body);
+
+				if (!Craft::$app->getMailer()->send($newEmail)) {
 				
-				Craft::$app->language = $originalLanguage;
-				$view->setTemplateMode($oldTemplateMode);
-	
-				return false;
-			}
-
-		} else {
-			$error = Craft::t('affiliate', 'Template not found “{code}”.', [
-				'code' => $customerCode
-			]);
-
-			Craft::error($error, __METHOD__);
-		}
+					$error = Craft::t('affiliate', 'Email Error');
 		
-		Craft::$app->language = $originalLanguage;
-		$view->setTemplateMode($oldTemplateMode);
+					Craft::error($error, __METHOD__);
+					
+					Craft::$app->language = $originalLanguage;
+					$view->setTemplateMode($oldTemplateMode);
+		
+					return false;
+				}
+
+			} else {
+				$error = Craft::t('affiliate', 'Template not found “{code}”.', [
+					'code' => $customerCode
+				]);
+
+				Craft::error($error, __METHOD__);
+			}
+			
+			Craft::$app->language = $originalLanguage;
+			$view->setTemplateMode($oldTemplateMode);
+		}
 
 		return true;
 
