@@ -2,7 +2,7 @@
     "name": "kuriousagency/commerce-affiliate",
     "description": "Plugin to add affiliates to Craft Commerce",
     "type": "craft-plugin",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "keywords": [
         "craft",
         "cms",
