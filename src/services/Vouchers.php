@@ -44,7 +44,7 @@ class Vouchers extends Component
 		// check this is new customers first order
 		$newCustomerOrders = Commerce::getInstance()->getOrders()->getOrdersByEmail($order->email);
 
-		if(count($newCustomerOrders) == 1) {
+		if( (count($newCustomerOrders) == 1) && ($order->couponCode) ) {
 
 			// create voucher code
 			$code = $this->createGiftVoucher($affiliateUser);
@@ -54,7 +54,7 @@ class Vouchers extends Component
 
 		}
 
-		return false;
+		return true;
 
 	}
 	
