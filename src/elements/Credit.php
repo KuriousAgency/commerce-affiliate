@@ -149,11 +149,13 @@ class Credit extends Element
      *
      * @return User
      */
-    public function getUser(): User
+    public function getUser()
     {
-        if (null === $this->_user) {
+        if ( (null === $this->_user) && ($this->userId) ) {
             $this->_user = Craft::$app->getUsers()->getUserById($this->userId);
-        }
+		} else {
+			$this->_user = null;
+		}
 
         return $this->_user;
 	}
@@ -277,7 +279,7 @@ class Credit extends Element
 			case 'user':
 				{
 					$user = $this->getUser();
-					$url = $user->getCpEditUrl();
+					$url = $user ? $user->getCpEditUrl() : '';
 
 					return '<a href="' . $url . '">' . $user . '</a>';
 				}
@@ -295,7 +297,7 @@ class Credit extends Element
 				{
 					$totalPrice = Currency::round($this->totalPrice);
 
-					if(isset($this->getUser()->currency)) {
+					if( (isset($this->getUser()->currency)) && ($this->getUser()->currency) ) {
 						$currency = $this->getUser()->currency;
 					} else {
 						$currency = Commerce::getInstance()->getPaymentCurrencies()->getPrimaryPaymentCurrencyIso();
