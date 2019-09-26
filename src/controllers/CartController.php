@@ -54,7 +54,7 @@ class CartController extends Controller
 		$discountCodeId = str_replace('_','',Affiliate::$plugin->getSettings()->newCustomerDiscountCodeId);
 		$discount = Commerce::getInstance()->getDiscounts()->getDiscountById($discountCodeId);
 
-		if(strcasecmp($couponCode, $discount->code) == 0) {
+		if($discount && (strcasecmp($couponCode, $discount->code) == 0) ) {
 			
 			$error = Craft::t('affiliate', 'Code is not valid');
 			Craft::$app->getSession()->setError($error);
