@@ -287,6 +287,10 @@ class InvoiceQuery extends ElementQuery
 			'affiliate_invoices.paymentEmail',
         ]);
 
+        if ($this->userId) {
+            $this->subQuery->andWhere(Db::parseParam('affiliate_invoices.userId', $this->userId));
+		}
+
         if ($this->firstName) {
             $this->subQuery->andWhere(Db::parseParam('affiliate_invoices.firstName', $this->firstName));
 		}
