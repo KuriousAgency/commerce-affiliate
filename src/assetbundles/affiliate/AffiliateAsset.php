@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2019 Kurious Agency
  */
 
-namespace kuriousagency\affiliate\assetbundles\Affiliate;
+namespace kuriousagency\affiliate\assetbundles\affiliate;
 
 use Craft;
 use craft\web\AssetBundle;
